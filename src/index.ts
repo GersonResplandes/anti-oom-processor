@@ -7,6 +7,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import { connectDB } from './config/database';
 import { config } from './config/env';
 import { uploadController, uploadSchema } from './controllers/upload.controller';
+import { sseController } from './controllers/sse.controller';
 
 const server = fastify({
     logger: true,
@@ -59,6 +60,9 @@ server.register(fastifyMultipart, {
 server.get('/health', async () => {
     return { status: 'ok', memory: process.memoryUsage() };
 });
+
+// Real-time Progress (SSE)
+server.get('/events', sseController);
 
 // Authenticated Routes (Protected)
 server.register(async (protectedRoutes) => {

@@ -56,7 +56,9 @@ flowchart LR
     -   `@fastify/multipart` (Busboy wrapper)
     -   `csv-parse` (Streamable Parser)
 -   **Database:** MongoDB + Mongoose (Bulk Operations)
--   **Observability:** Memory Usage Logging (Heartbeat)
+-   **Observability:**
+    -   Memory Usage Logging (Heartbeat)
+    -   **Server-Sent Events (SSE)** for Real-Time Frontend Progress
 
 ---
 
@@ -85,9 +87,10 @@ Instead of manually searching for a large CSV, use the included helper scripts t
 
 **A. Generate 100MB CSV**
 ```bash
+```bash
 npx ts-node scripts/generate-csv.ts
 ```
-*Creates `large_file.csv` in the root logic.*
+*Creates `large_file.csv` in the root (100MB).*
 
 **B. Stream Upload to Server**
 ```bash
@@ -99,8 +102,14 @@ npx ts-node scripts/test-upload.ts
 ```text
 [Progress] Processed: 10000 | Failed: 0 | Heap: 42MB
 [Progress] Processed: 20000 | Failed: 0 | Heap: 43MB  <-- Stable Memory!
-...
-[Progress] Processed: 1000000 | Failed: 0 | Heap: 42MB
+```
+
+### 5. Real-Time Dashboard (Visual Verification)
+To see the **RAM stays flat** graph capability without React/Vue:
+
+1.  Open `test-client.html` in your browser.
+2.  Run the upload script again.
+3.  Watch the progress bars and memory metrics update in real-time via **SSE**.
 ```
 
 ---
@@ -109,7 +118,6 @@ npx ts-node scripts/test-upload.ts
 
 | Limitation | Solution in v2.0 |
 | :--- | :--- |
-| **No Visual Progress** | Currently logs to console. v2.0 will implement **Server-Sent Events (SSE)** to stream progress bars to the frontend. |
 | **Single Node** | Works on one server. For distributed processing, we would need to stream the file to Amazon S3 first and trigger an SQS Worker. |
 
 ---

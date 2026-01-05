@@ -19,7 +19,8 @@ function write() {
     while (ok && currentSize < TARGET_SIZE_MB * 1024 * 1024) {
         const sku = `SKU-${i}`;
         const name = `Product Name ${i}`;
-        const price = (Math.random() * 1000).toFixed(2);
+        // Ensure price is never 0.00 to pass validation (price > 0)
+        const price = ((Math.random() * 1000) + 1).toFixed(2);
         const row = `${sku},${name},${price}\n`;
 
         currentSize += Buffer.byteLength(row);

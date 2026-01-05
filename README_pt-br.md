@@ -56,7 +56,9 @@ flowchart LR
     -   `@fastify/multipart` (Wrapper do Busboy)
     -   `csv-parse` (Parser compatível com Streams)
 -   **Banco de Dados:** MongoDB + Mongoose (Bulk Operations)
--   **Observabilidade:** Log de Uso de Memória (Heartbeat)
+-   **Observabilidade:**
+    -   Log de Uso de Memória (Heartbeat)
+    -   **Server-Sent Events (SSE)** para Progresso Visual em Tempo Real
 
 ---
 
@@ -85,9 +87,10 @@ Em vez de buscar manualmente um CSV gigante, utilize os scripts inclusos para ge
 
 **A. Gerar CSV de 100MB**
 ```bash
+```bash
 npx ts-node scripts/generate-csv.ts
 ```
-*Cria o arquivo `large_file.csv` na raiz do projeto.*
+*Cria o arquivo `large_file.csv` na raiz do projeto (100MB).*
 
 **B. Upload via Stream para o Servidor**
 ```bash
@@ -99,8 +102,14 @@ npx ts-node scripts/test-upload.ts
 ```text
 [Progress] Processed: 10000 | Failed: 0 | Heap: 42MB
 [Progress] Processed: 20000 | Failed: 0 | Heap: 43MB  <-- Memória Estável!
-...
-[Progress] Processed: 1000000 | Failed: 0 | Heap: 42MB
+```
+
+### 5. Dashboard em Tempo Real (Verificação Visual)
+Para ver o gráfico de **RAM Constante** sem precisar subir um front React/Vue:
+
+1.  Abra o arquivo `test-client.html` no seu navegador.
+2.  Rode o script de upload novamente.
+3.  Veja as barras de progresso e métricas de memória atualizando via **SSE**.
 ```
 
 ---
@@ -109,7 +118,6 @@ npx ts-node scripts/test-upload.ts
 
 | Limitação | Solução na v2.0 |
 | :--- | :--- |
-| **Sem Progresso Visual** | Atualmente loga no console. A v2.0 implementará **Server-Sent Events (SSE)** para transmitir barras de progresso ao frontend. |
 | **Single Node** | Funciona em um único servidor. Para processamento distribuído, precisaríamos enviar o arquivo para o Amazon S3 primeiro e acionar um Worker SQS. |
 
 ---

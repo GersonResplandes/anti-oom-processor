@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Monitor - Anti-OOM</title>
+    <style>
+        body { font-family: monospace; background: #1a1a1a; color: #0f0; padding: 20px; }
+        #log { border: 1px solid #333; padding: 10px; height: 400px; overflow-y: scroll; background: #000; }
+        .success { color: #0f0; }
+        .processing { color: #ff0; }
+    </style>
+</head>
+<body>
+    <h1>🖥️ SSE Real-Time Monitor</h1>
+    <p>Status: <span id="status">Disconnected</span></p>
+    <div id="log">Waiting for connection...</div>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const logEl = document.getElementById('log');
+
+        function appendLog(msg, type = 'info') {
+            const line = document.createElement('div');
+            line.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            if (type) line.className = type;
+            logEl.appendChild(line);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        const events = new EventSource('http://localhost:3000/events');
+
+        events.onopen = () => {
+            statusEl.textContent = 'Connected 🟢';
+            appendLog('Connection established', 'success');
+        };
+
+        events.onerror = (err) => {
+            if (events.readyState === EventSource.CLOSED) {
+                statusEl.textContent = 'Disconnected 🔴';
+                appendLog('Connection closed', 'error');
+            } else {
+                statusEl.textContent = 'Reconnecting 🟡';
+            }
+        };
+
+        events.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.status === 'completed') {
+                    appendLog(`✅ COMPLETED: ${data.processed} rows processed.`, 'success');
+                } else if (data.processed) {
+                    const memInfo = data.memoryMB ? ` | RAM: ${data.memoryMB}MB` : '';
+                    appendLog(`⚡ Progress: ${data.processed} rows | Failed: ${data.failed}${memInfo}`, 'processing');
+                } else {
+                    appendLog(`📦 Unknown: ${event.data}`);
+                }
+            } catch (e) {
+                appendLog(`Raw Data: ${event.data}`);
+            }
+        };
+    </script>
+</body>
+</html>
