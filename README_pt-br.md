@@ -18,6 +18,12 @@ Este projeto resolve isso tratando os dados como um **Fluxo (Flow)**, e não com
 
 ---
 
+## ✨ Demo
+
+![Anti-OOM Demo](demo.gif)
+
+---
+
 ## 🌊 Arquitetura e Fluxo de Dados
 
 ```mermaid
@@ -87,7 +93,6 @@ Em vez de buscar manualmente um CSV gigante, utilize os scripts inclusos para ge
 
 **A. Gerar CSV de 100MB**
 ```bash
-```bash
 npx ts-node scripts/generate-csv.ts
 ```
 *Cria o arquivo `large_file.csv` na raiz do projeto (100MB).*
@@ -104,12 +109,12 @@ npx ts-node scripts/test-upload.ts
 [Progress] Processed: 20000 | Failed: 0 | Heap: 43MB  <-- Memória Estável!
 ```
 
-### 5. Dashboard em Tempo Real (Verificação Visual)
-Para ver o gráfico de **RAM Constante** sem precisar subir um front React/Vue:
+### 5. Dashboard em Tempo Real (Demo SSE)
+Para visualizar a eficiência de memória em tempo real sem ferramentas externas:
 
-1.  Abra o arquivo `test-client.html` no seu navegador.
-2.  Rode o script de upload novamente.
-3.  Veja as barras de progresso e métricas de memória atualizando via **SSE**.
+1.  Abra o arquivo `test-client.html` no seu navegador (arraste e solte o arquivo).
+2.  Rode o script de upload no seu terminal: `npm run upload`.
+3.  Acompanhe a atualização do dashboard via **Server-Sent Events** enquanto o uso de RAM permanece estável.
 ```
 
 ---

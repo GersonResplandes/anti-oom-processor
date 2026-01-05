@@ -18,6 +18,12 @@ This project solves this by treating data as a **Flow**, not a Block.
 
 ---
 
+## ✨ Demo
+
+![Anti-OOM Demo](demo.gif)
+
+---
+
 ## 🌊 Architecture & Data Flow
 
 ```mermaid
@@ -87,7 +93,6 @@ Instead of manually searching for a large CSV, use the included helper scripts t
 
 **A. Generate 100MB CSV**
 ```bash
-```bash
 npx ts-node scripts/generate-csv.ts
 ```
 *Creates `large_file.csv` in the root (100MB).*
@@ -104,12 +109,12 @@ npx ts-node scripts/test-upload.ts
 [Progress] Processed: 20000 | Failed: 0 | Heap: 43MB  <-- Stable Memory!
 ```
 
-### 5. Real-Time Dashboard (Visual Verification)
-To see the **RAM stays flat** graph capability without React/Vue:
+### 5. Real-Time Dashboard (SSE Demo)
+To visualize the memory efficiency in real-time without external tools:
 
-1.  Open `test-client.html` in your browser.
-2.  Run the upload script again.
-3.  Watch the progress bars and memory metrics update in real-time via **SSE**.
+1.  Open the file `test-client.html` in your browser (drag and drop the file).
+2.  Run the upload script in your terminal: `npm run upload`.
+3.  Watch the dashboard update via **Server-Sent Events** while the RAM usage remains flat.
 ```
 
 ---
